@@ -1,5 +1,5 @@
 {
-  "name": "validate-form",
+  "name": "lh-validate-form",
   "version": "1.0.0",
   "description": "form校验",
   "main": "src/index.js",
