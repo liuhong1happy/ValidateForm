@@ -6,7 +6,7 @@ form校验
 
 install
 
-  npm install --save git+https://github.com/liuhong1happy/ValidateForm.git
+  npm install --save git+https://github.com/liuhong1happy/lh-validate-form.git
 
 quickly start
 
