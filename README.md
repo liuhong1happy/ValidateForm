@@ -6,15 +6,15 @@ form校验
 
 install
 
-  npm install --save lh-validate-form
+    npm install --save lh-validate-form
 
 quickly start
 
 ```js
   // 1. rules
   const rules = [
-    new ValidateRule({ field: 'firstName', required: true, msg: 'firstName field is required. '}),
-    new ValidateRule({ field: 'lastName', required: true, msg: 'lastName field is required. '}),
+    { field: 'firstName', required: true, msg: 'firstName field is required. '},
+    { field: 'lastName', required: true, msg: 'lastName field is required. '},
   ]
   // 2. validator
   const validator = new Validator(rules);
