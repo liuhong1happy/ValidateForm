@@ -11,6 +11,8 @@ install
 quickly start
 
 ```js
+  import { Validator } from 'lh-validate-form';
+   
   // 1. rules
   const rules = [
     { field: 'firstName', required: true, msg: 'firstName field is required. '},
