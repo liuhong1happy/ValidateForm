@@ -83,8 +83,10 @@ Validator.prototype.validateAll = function() {
         } else if(rule.custom && rule.custom instanceof Function) {
           validate = rule.custom(rule, formData);
         }
-        rule.validate = validate;
-        resultList.push(new ValidateResult(rule));
+        if(!validate) {
+          rule.validate = false;
+          resultList.push(new ValidateResult(rule));
+        }
     }
     return resultList;
 }
