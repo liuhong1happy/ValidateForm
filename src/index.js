@@ -35,13 +35,15 @@ module.exports.ValidateResult = ValidateResult;
 
 function Validator(rules) {
   this.rules = rules || [];
+  for(var i=0;i<this.rules.length;i++){
+      this.rules[i] = new ValidateRule(this.rules[i]);
+  }
 }
 
 Validator.prototype.validate = function() {
     var validate = true;
     for(var i=0;i<this.rules.length;i++){
-      var rule = this.rules[i];
-      if(rule instanceof ValidateRule) {
+        var rule = this.rules[i];
         var item = formData[rule.field];
         if(rule.required) {
           validate = !!item;
@@ -59,7 +61,6 @@ Validator.prototype.validate = function() {
           validate = rule.custom(rule, formData);
           break;
         }
-      }
     }
     rule.validate = validate;
     return new ValidateResult(rule);
@@ -68,9 +69,8 @@ Validator.prototype.validate = function() {
 Validator.prototype.validateAll = function() {
     var resultList = [];
     for(var i=0;i<this.rules.length;i++){
-      var validate = true;
-      var rule = this.rules[i];
-      if(rule instanceof ValidateRule) {
+        var validate = true;
+        var rule = this.rules[i];
         var item = formData[rule.field];
         if(rule.required) {
           validate = !!item;
@@ -83,9 +83,8 @@ Validator.prototype.validateAll = function() {
         } else if(rule.custom && rule.custom instanceof Function) {
           validate = rule.custom(rule, formData);
         }
-      }
-      rule.validate = validate;
-      resultList.push(new ValidateResult(rule));
+        rule.validate = validate;
+        resultList.push(new ValidateResult(rule));
     }
     return resultList;
 }
