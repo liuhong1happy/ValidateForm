@@ -84,7 +84,6 @@ Validator.prototype.validateAll = function() {
           validate = rule.custom(rule, formData);
         }
         if(!validate) {
-          rule.validate = false;
           resultList.push(new ValidateResult(rule));
         }
     }
