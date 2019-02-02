@@ -45,28 +45,49 @@ Validator.prototype.validate = function() {
         var item = formData[rule.field];
         if(rule.required) {
           validate = !!item;
-          if(!validate) return new ValidateResult({ validate: false, ...rule })
-        }
-        if(rule.max && typeof item === 'string') {
-          validate = item.length <= rule.max
-          if(!validate) return new ValidateResult({ validate: false, ...rule })
-        }
-        if(rule.min && typeof item === 'string') {
-          validate = item.length >= rule.min
-          if(!validate) return new ValidateResult({ validate: false, ...rule })
-        }
-        if(rule.regex && typeof item === 'string') {
-          validate = item.match(rule.regex)
-          if(!validate) return new ValidateResult({ validate: false, ...rule })
-        }
-        if(rule.custom && rule.custom instanceof Function) {
-          validate = rule.custom(rule, formData)
-          if(!validate) return new ValidateResult({ validate: false, ...rule })
+          break;
+        } else if(rule.max && typeof item === 'string') {
+          validate = item.length <= rule.max;
+          break;
+        } else if(rule.min && typeof item === 'string') {
+          validate = item.length >= rule.min;
+          break;
+        } else if(rule.regex && typeof item === 'string') {
+          validate = item.match(rule.regex);
+          break;
+        } else if(rule.custom && rule.custom instanceof Function) {
+          validate = rule.custom(rule, formData);
+          break;
         }
       }
     }
     rule.validate = validate;
     return new ValidateResult(rule);
+}
+
+Validator.prototype.validateAll = function() {
+    var resultList = [];
+    for(var i=0;i<this.rules.length;i++){
+      var validate = true;
+      var rule = this.rules[i];
+      if(rule instanceof ValidateRule) {
+        var item = formData[rule.field];
+        if(rule.required) {
+          validate = !!item;
+        } else if(rule.max && typeof item === 'string') {
+          validate = item.length <= rule.max;
+        } else if(rule.min && typeof item === 'string') {
+          validate = item.length >= rule.min;
+        } else if(rule.regex && typeof item === 'string') {
+          validate = item.match(rule.regex);
+        } else if(rule.custom && rule.custom instanceof Function) {
+          validate = rule.custom(rule, formData);
+        }
+      }
+      rule.validate = validate;
+      resultList.push(new ValidateResult(rule));
+    }
+    return resultList;
 }
 
 module.exports.Validator = Validator;
