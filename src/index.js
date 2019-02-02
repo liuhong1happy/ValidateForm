@@ -1,27 +1,43 @@
-export class ValidateResult {
-  field = "field";
-  required = false;
-  max = null;
-  min = null;
-  regex = null;
-  msg = "invalid field value."
-  validate = false;
-  constructor(options) {
-    this.field = options.field || 'field';
-    this.required = options.required || false;
-    this.max = options.max || null;
-    this.min = options.min || null;
-    this.msg = options.msg ||  "invalid field value.";
-    this.regex = options.regex || null;
-    this.validate = options.validate || false;
+function ValidateRule(options) {
+  if(options==null) {
+    options = {}
+  }
+  var keys = Object.keys(ValidateRule.prototype);
+  for(var i=0;i<keys.length;i++) {
+    var key = keys[i];
+    if(options[key]!=null)
+      this[key] = options[key]
   }
 }
 
-export class Validator {
-  constructor(rules) {
-    this.rules = rules || [];
+ValidateRule.prototype.field = "field";
+ValidateRule.prototype.required = false;
+ValidateRule.prototype.max = null;
+ValidateRule.prototype.min = null;
+ValidateRule.prototype.regex = null;
+ValidateRule.prototype.custom = null;
+ValidateRule.prototype.msg = "invalid field value.";
+
+module.exports.ValidateRule = ValidateRule;
+
+function ValidateResult(options) {
+  ValidateRule.call(this, options);
+  if(options.validate != null) {
+    this.validate = options.validate;
   }
-  validate(formData) {
+}
+
+ValidateResult.prototype = new ValidateRule(); 
+ValidateResult.prototype.constructor = ValidateResult;
+ValidateResult.prototype.validate = false;
+
+module.exports.ValidateResult = ValidateResult;
+
+function Validator(rules) {
+  this.rules = rules || [];
+}
+
+Validator.prototype.validate = function() {
     var validate = true;
     for(var i=0;i<this.rules.length;i++){
       var rule = this.rules[i];
@@ -49,25 +65,9 @@ export class Validator {
         }
       }
     }
-    return new ValidateResult({ validate, ...rule });
-  }
+    rule.validate = validate;
+    return new ValidateResult(rule);
 }
 
-export class ValidateRule {
-  constructor(options) {
-    this.field = options.field || 'field';
-    this.required = options.required || false;
-    this.max = options.max || null;
-    this.min = options.min || null;
-    this.msg = options.msg ||  "invalid field value.";
-    this.regex = options.regex || null;
-    this.custom = options.custom || null;
-  }
-  field = "field";
-  required = false;
-  max = null;
-  min = null;
-  regex = null;
-  custom = null;
-  msg = "invalid field value."
-}
+module.exports.Validator = Validator;
+
